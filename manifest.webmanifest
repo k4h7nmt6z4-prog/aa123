@@ -1,0 +1,17 @@
+{
+  "name": "鐵管裁切計算",
+  "short_name": "鐵管裁切",
+  "description": "橫桿、斜桿鐵管裁切長度計算與裁切清單",
+  "lang": "zh-Hant-TW",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#eef1f4",
+  "theme_color": "#1f5f99",
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icons/maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
