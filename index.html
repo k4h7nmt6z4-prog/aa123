@@ -53,6 +53,8 @@ header p{margin:4px 0 0;color:var(--muted);font-size:.9rem}
 .inp input,.inp select{width:100%;min-width:0;border:0;background:transparent;color:var(--fg);font-family:var(--f-num);font-size:1rem;padding:9px 6px 9px 10px;text-align:right}
 .inp select{text-align:left;font-family:var(--f-ui);font-size:.9rem}
 .inp span{font-family:var(--f-num);font-size:.75rem;color:var(--muted);padding-right:9px}
+.memo{margin-top:6px;padding:12px 14px;border:1px solid var(--mark);border-left-width:4px;border-radius:8px;background:var(--mark-soft);font-size:.92rem;line-height:1.6}
+.memo b{display:block;font-size:.78rem;letter-spacing:.1em;color:var(--muted);margin-bottom:2px}
 .stack{display:flex;flex-direction:column;gap:6px;min-width:0}
 .chips{display:flex;flex-wrap:wrap;gap:6px}
 .chips button{border:1px solid var(--line);background:var(--bg);color:var(--fg);font:inherit;font-size:.85rem;padding:5px 11px;border-radius:99px;cursor:pointer}
@@ -192,6 +194,7 @@ td.x button{border:0;background:transparent;color:var(--muted);cursor:pointer;fo
         <option value="42.5">輕型 42.5</option>
         <option value="50">重型 50</option>
         <option value="custom">自訂</option></select></div><div class="inp" id="p-head-wrap" hidden><input id="p-head" type="number" inputmode="decimal" step="any" value="42.5" aria-label="自訂橫桿頭扣除"><span>mm</span></div></div></div>
+      <div class="memo" role="note"><b>備註</b>有歪頭，頭和管中心線不在同一直線時，此算法皆不適用。</div>
     </div>
     <div class="panel">
       <div class="result"><div class="lbl">鐵管裁切長度</div><div class="big" id="p-out">—</div><div class="note">斜邊 − 主架管外徑 − 橫桿頭 × 2</div><div class="wt"><div class="lbl">鐵管重量 · STK500<span style="font-weight:400"> · 點選規格加入清單</span></div><div id="p-wt" role="radiogroup" aria-label="鐵管規格"></div></div></div>
