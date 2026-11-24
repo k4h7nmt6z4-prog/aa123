@@ -53,6 +53,7 @@ header p{margin:4px 0 0;color:var(--muted);font-size:.9rem}
 .inp input,.inp select{width:100%;min-width:0;border:0;background:transparent;color:var(--fg);font-family:var(--f-num);font-size:1rem;padding:9px 6px 9px 10px;text-align:right}
 .inp select{text-align:left;font-family:var(--f-ui);font-size:.9rem}
 .inp span{font-family:var(--f-num);font-size:.75rem;color:var(--muted);padding-right:9px}
+.stack{display:flex;flex-direction:column;gap:6px;min-width:0}
 .chips{display:flex;flex-wrap:wrap;gap:6px}
 .chips button{border:1px solid var(--line);background:var(--bg);color:var(--fg);font:inherit;font-size:.85rem;padding:5px 11px;border-radius:99px;cursor:pointer}
 .chips button.on{border-color:var(--accent);color:var(--accent);font-weight:700}
@@ -143,12 +144,11 @@ td.x button{border:0;background:transparent;color:var(--muted);cursor:pointer;fo
       </div>
       <div class="field"><label for="d-w">主架管中心到管中心<small>水平</small></label><div class="inp"><input id="d-w" type="number" inputmode="decimal" step="any" value="1829"><span>mm</span></div></div>
       <div class="field"><label for="d-v">垂直距離</label><div class="inp"><input id="d-v" type="number" inputmode="decimal" step="any" value="1500"><span>mm</span></div></div>
-      <div class="field"><label for="d-type">架型</label><div class="inp"><select id="d-type">
+      <div class="field"><label for="d-type">架型<small>管中心到斜桿頭鉚釘孔，單邊扣除</small></label><div class="stack"><div class="inp"><select id="d-type">
         <option value="82">輕型架 82</option>
         <option value="99">標準架 99</option>
         <option value="103.6">重型架 103.6</option>
-        <option value="custom">自訂</option></select></div></div>
-      <div class="field"><label for="d-off">管中心到斜桿頭鉚釘孔<small>單邊</small></label><div class="inp"><input id="d-off" type="number" inputmode="decimal" step="any" value="82"><span>mm</span></div></div>
+        <option value="custom">自訂</option></select></div><div class="inp" id="d-off-wrap" hidden><input id="d-off" type="number" inputmode="decimal" step="any" value="82" aria-label="自訂單邊扣除"><span>mm</span></div></div></div>
       <div class="field"><label for="d-end">鉚釘孔到管端加長<small>單邊</small></label><div class="inp"><input id="d-end" type="number" inputmode="decimal" step="any" value="25"><span>mm</span></div></div>
     </div>
     <div class="panel">
@@ -244,8 +244,7 @@ document.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>setMode(b.dat
 document.querySelectorAll('input').forEach(i=>i.addEventListener('input',calc));
 $('h-od').onchange=calc;
 $('h-type').onchange=()=>{const v=$('h-type').value;if(v!=='custom'){$('h-head').value=v;sel.h=v==='50'?1:0}calc()};
-$('d-type').onchange=()=>{const v=$('d-type').value;if(v!=='custom')$('d-off').value=v;calc()};
-$('d-off').addEventListener('input',()=>{const v=$('d-off').value;$('d-type').value=['82','99','103.6'].includes(v)?v:'custom'});
+$('d-type').onchange=()=>{const v=$('d-type').value,c=v==='custom';$('d-off-wrap').hidden=!c;if(!c)$('d-off').value=v;else $('d-off').focus();calc()};
 $('h-head').addEventListener('input',()=>{const v=$('h-head').value;$('h-type').value=(v==='42.5'||v==='50')?v:'custom'});
 document.querySelectorAll('#h-presets button').forEach(b=>b.onclick=()=>{$('h-c').value=b.dataset.c;calc()});
 document.querySelectorAll('#d-presets button').forEach(b=>b.onclick=()=>{$('d-w').value=b.dataset.w;$('d-v').value=b.dataset.v;calc()});
