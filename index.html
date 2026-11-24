@@ -288,7 +288,15 @@ $('copy').onclick=async()=>{
 let m='h';try{m=localStorage.getItem('pc-mode')||'h'}catch(e){}
 render();setMode(m==='d'?'d':'h');
 
-if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}))}
+if('serviceWorker' in navigator){
+  // 有新版時自動重新載入，不用手動清快取
+  const hadSW=!!navigator.serviceWorker.controller;let reloaded=false;
+  navigator.serviceWorker.addEventListener('controllerchange',()=>{if(hadSW&&!reloaded){reloaded=true;location.reload()}});
+  window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js',{updateViaCache:'none'}).then(r=>{
+    r.update().catch(()=>{});
+    document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')r.update().catch(()=>{})});
+  }).catch(()=>{}));
+}
 </script>
 </body>
 </html>

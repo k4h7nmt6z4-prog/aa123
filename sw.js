@@ -1,5 +1,5 @@
 // 鐵管裁切計算 — service worker：離線可用
-const CACHE = 'pipe-cut-v9';
+const CACHE = 'pipe-cut-v10';
 const CORE = ['./', './index.html', './manifest.webmanifest',
   './icons/icon-192.png', './icons/icon-512.png', './icons/maskable-512.png', './icons/apple-touch-icon.png'];
 
@@ -20,7 +20,7 @@ self.addEventListener('fetch', e => {
 
   // 頁面：先走網路拿最新版，離線時用快取
   if (req.mode === 'navigate') {
-    e.respondWith(fetch(req).then(res => {
+    e.respondWith(fetch(req, { cache: 'no-cache' }).then(res => {
       const copy = res.clone(); caches.open(CACHE).then(c => c.put('./index.html', copy));
       return res;
     }).catch(() => caches.match('./index.html')));
