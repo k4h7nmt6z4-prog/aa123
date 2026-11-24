@@ -114,8 +114,8 @@ td.x button{border:0;background:transparent;color:var(--muted);cursor:pointer;fo
       <div class="field"><label for="h-c">主架管中心到管中心</label><div class="inp"><input id="h-c" type="number" inputmode="decimal" step="any" value="1800"><span>mm</span></div></div>
       <div class="field"><label for="h-od">主架管外徑</label><div class="inp"><select id="h-od"><option value="48.4">Ø48.4 mm</option><option value="60.2">Ø60.2 mm</option></select></div></div>
       <div class="field"><label for="h-type">橫桿頭</label><div class="inp"><select id="h-type">
-        <option value="42.5">輕型（扣 42.5）</option>
-        <option value="50">重型（扣 50）</option>
+        <option value="42.5">輕型 42.5</option>
+        <option value="50">重型 50</option>
         <option value="custom">自訂</option></select></div></div>
       <div class="field"><label for="h-head">橫桿頭單邊扣除<small>兩端各扣一次</small></label><div class="inp"><input id="h-head" type="number" inputmode="decimal" step="any" value="42.5"><span>mm</span></div></div>
     </div>
@@ -143,6 +143,11 @@ td.x button{border:0;background:transparent;color:var(--muted);cursor:pointer;fo
       </div>
       <div class="field"><label for="d-w">主架管中心到管中心<small>水平</small></label><div class="inp"><input id="d-w" type="number" inputmode="decimal" step="any" value="1829"><span>mm</span></div></div>
       <div class="field"><label for="d-v">垂直距離</label><div class="inp"><input id="d-v" type="number" inputmode="decimal" step="any" value="1500"><span>mm</span></div></div>
+      <div class="field"><label for="d-type">架型</label><div class="inp"><select id="d-type">
+        <option value="82">輕型架 82</option>
+        <option value="99">標準架 99</option>
+        <option value="103.6">重型架 103.6</option>
+        <option value="custom">自訂</option></select></div></div>
       <div class="field"><label for="d-off">管中心到斜桿頭鉚釘孔<small>單邊</small></label><div class="inp"><input id="d-off" type="number" inputmode="decimal" step="any" value="82"><span>mm</span></div></div>
       <div class="field"><label for="d-end">鉚釘孔到管端加長<small>單邊</small></label><div class="inp"><input id="d-end" type="number" inputmode="decimal" step="any" value="25"><span>mm</span></div></div>
     </div>
@@ -155,7 +160,7 @@ td.x button{border:0;background:transparent;color:var(--muted);cursor:pointer;fo
         <circle cx="52" cy="128" r="4" fill="var(--fg)"/><circle cx="268" cy="22" r="4" fill="var(--fg)"/>
         <line x1="52" y1="146" x2="268" y2="146" stroke="var(--muted)" stroke-dasharray="3 3"/>
         <text x="160" y="140" text-anchor="middle">水平鉚釘距</text>
-        <text x="36" y="118" text-anchor="middle">82</text><text x="284" y="40" text-anchor="middle">82</text>
+        <text x="36" y="118" text-anchor="middle" class="d-offl">82</text><text x="284" y="40" text-anchor="middle" class="d-offl">82</text>
         <text x="170" y="66" text-anchor="middle">斜邊</text>
       </svg>
       <p class="warn">算法：水平方向兩端各扣鉚釘孔偏移，垂直距離直接計算斜邊，再兩端各加管端長度。</p>
@@ -212,6 +217,8 @@ function calcH(){
 }
 function calcD(){
   const w=num('d-w'),v=num('d-v'),off=num('d-off'),end=num('d-end');
+  document.querySelectorAll('.d-offl').forEach(t=>t.textContent=f(off));
+  const dt=$('d-type').value, frame=dt==='82'?'輕型架':dt==='99'?'標準架':dt==='103.6'?'重型架':'自訂';
   const a=w-off*2, hyp=Math.sqrt(a*a+v*v), cut=hyp+end*2;
   $('d-out').innerHTML=Number.isFinite(cut)&&a>0?`${f(cut)}<small>mm</small>`:'—';
   $('d-steps').innerHTML=`
@@ -219,7 +226,7 @@ function calcD(){
    <li><b>斜邊</b><span>√(${f(a)}² + ${f(v)}²) = √${f(a*a+v*v,0)} = ${f(hyp,2)}</span></li>
    <li><b>加管端</b><span>${f(hyp,2)} + ${f(end)} + ${f(end)} = ${f(cut)}</span></li>`;
   const wt=showKg('d',a>0?cut:NaN);
-  current=Number.isFinite(cut)&&a>0?{kind:'斜桿',spec:`${f(w)} × ${f(v)} · ${wt.pipe}`,len:cut,kg:wt.kg}:null;
+  current=Number.isFinite(cut)&&a>0?{kind:'斜桿',spec:`${f(w)} × ${f(v)} · ${frame} ${f(off)} · ${wt.pipe}`,len:cut,kg:wt.kg}:null;
 }
 function calc(){mode==='h'?calcH():calcD();markPresets()}
 function markPresets(){
@@ -237,6 +244,8 @@ document.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>setMode(b.dat
 document.querySelectorAll('input').forEach(i=>i.addEventListener('input',calc));
 $('h-od').onchange=calc;
 $('h-type').onchange=()=>{const v=$('h-type').value;if(v!=='custom'){$('h-head').value=v;sel.h=v==='50'?1:0}calc()};
+$('d-type').onchange=()=>{const v=$('d-type').value;if(v!=='custom')$('d-off').value=v;calc()};
+$('d-off').addEventListener('input',()=>{const v=$('d-off').value;$('d-type').value=['82','99','103.6'].includes(v)?v:'custom'});
 $('h-head').addEventListener('input',()=>{const v=$('h-head').value;$('h-type').value=(v==='42.5'||v==='50')?v:'custom'});
 document.querySelectorAll('#h-presets button').forEach(b=>b.onclick=()=>{$('h-c').value=b.dataset.c;calc()});
 document.querySelectorAll('#d-presets button').forEach(b=>b.onclick=()=>{$('d-w').value=b.dataset.w;$('d-v').value=b.dataset.v;calc()});
