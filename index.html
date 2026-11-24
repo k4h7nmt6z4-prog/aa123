@@ -60,6 +60,9 @@ header p{margin:4px 0 0;color:var(--muted);font-size:.9rem}
 .result .lbl{font-size:.8rem;letter-spacing:.1em;color:var(--muted);font-weight:700}
 .result .big{font-family:var(--f-num);font-size:2.6rem;font-weight:600;line-height:1.15;font-variant-numeric:tabular-nums}
 .result .big small{font-size:1rem;color:var(--muted);margin-left:4px}
+.result.sub{background:var(--panel);border:1px solid var(--line)}
+.result.sub .big{font-size:1.7rem}
+.result .note{font-size:.78rem;color:var(--muted);margin-top:2px}
 .steps{font-family:var(--f-num);font-size:.86rem;font-variant-numeric:tabular-nums;margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:6px}
 .steps li{display:grid;grid-template-columns:auto 1fr;gap:8px;overflow-wrap:anywhere}
 .steps b{color:var(--muted);font-weight:500;font-family:var(--f-ui);font-size:.8rem;min-width:5.5em}
@@ -109,7 +112,8 @@ td.x button{border:0;background:transparent;color:var(--muted);cursor:pointer;fo
       <div class="field"><label for="h-head">橫桿頭單邊扣除<small>兩端各扣一次</small></label><div class="inp"><input id="h-head" type="number" inputmode="decimal" step="any" value="42.5"><span>mm</span></div></div>
     </div>
     <div class="panel">
-      <div class="result"><div class="lbl">鐵管裁切長度</div><div class="big" id="h-out">—</div></div>
+      <div class="result sub"><div class="lbl">工件長度</div><div class="big" id="h-work">—</div><div class="note">管中心到管中心 − 主架管外徑</div></div>
+      <div class="result"><div class="lbl">鐵管裁切長度</div><div class="big" id="h-out">—</div><div class="note">工件長度 − 橫桿頭 × 2</div></div>
       <ol class="steps" id="h-steps"></ol>
       <svg class="dia" viewBox="0 0 320 90" aria-hidden="true">
         <rect x="14" y="10" width="14" height="70" rx="3" fill="var(--line)"/><rect x="292" y="10" width="14" height="70" rx="3" fill="var(--line)"/>
@@ -179,11 +183,12 @@ function calcH(){
   const clear=c-od, cut=clear-hd*2;
   const typeSel=$('h-type').value;
   const typeName=typeSel==='42.5'?'輕型':typeSel==='50'?'重型':'自訂';
+  $('h-work').innerHTML=Number.isFinite(clear)&&clear>0?`${f(clear)}<small>mm</small>`:'—';
   $('h-out').innerHTML=Number.isFinite(cut)&&cut>0?`${f(cut)}<small>mm</small>`:'—';
   $('h-steps').innerHTML=`
-   <li><b>管間淨距</b><span>${f(c)} − ${f(od)} = ${f(clear)}</span></li>
-   <li><b>扣橫桿頭</b><span>${f(clear)} − ${f(hd)} − ${f(hd)} = ${f(cut)}</span></li>`;
-  current=Number.isFinite(cut)&&cut>0?{kind:'橫桿',spec:`中心距 ${f(c)} · ${typeName}頭 ${f(hd)}`,len:cut}:null;
+   <li><b>工件長度</b><span>${f(c)} − ${f(od)} = ${f(clear)}</span></li>
+   <li><b>裁切長度</b><span>${f(clear)} − ${f(hd)} − ${f(hd)} = ${f(cut)}</span></li>`;
+  current=Number.isFinite(cut)&&cut>0?{kind:'橫桿',spec:`中心距 ${f(c)} · 工件長 ${f(clear)} · ${typeName}頭 ${f(hd)}`,len:cut}:null;
 }
 function calcD(){
   const w=num('d-w'),v=num('d-v'),off=num('d-off'),end=num('d-end');
