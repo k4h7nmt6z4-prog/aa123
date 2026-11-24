@@ -224,7 +224,7 @@ function calcD(){
   $('d-steps').innerHTML=`
    <li><b>水平鉚釘距</b><span>${f(w)} − ${f(off)} − ${f(off)} = ${f(a)}</span></li>
    <li><b>斜邊</b><span>√(${f(a)}² + ${f(v)}²) = √${f(a*a+v*v,0)} = ${f(hyp,2)}</span></li>
-   <li><b>加管端</b><span>${f(hyp,2)} + ${f(end)} + ${f(end)} = ${f(cut)}</span></li>`;
+   <li><b>裁切長度</b><span>${f(hyp,2)} + ${f(end)} + ${f(end)} = ${f(cut)}</span></li>`;
   const wt=showKg('d',a>0?cut:NaN);
   current=Number.isFinite(cut)&&a>0?{kind:'斜桿',spec:`${f(w)} × ${f(v)} · ${frame} ${f(off)} · ${wt.pipe}`,len:cut,kg:wt.kg}:null;
 }
