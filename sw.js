@@ -1,5 +1,5 @@
 // 鐵管裁切計算 — service worker：離線可用
-const CACHE = 'pipe-cut-v3';
+const CACHE = 'pipe-cut-v4';
 const CORE = ['./', './index.html', './manifest.webmanifest',
   './icons/icon-192.png', './icons/icon-512.png', './icons/maskable-512.png', './icons/apple-touch-icon.png'];
 

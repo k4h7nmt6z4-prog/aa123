@@ -60,6 +60,10 @@ header p{margin:4px 0 0;color:var(--muted);font-size:.9rem}
 .result .lbl{font-size:.8rem;letter-spacing:.1em;color:var(--muted);font-weight:700}
 .result .big{font-family:var(--f-num);font-size:2.6rem;font-weight:600;line-height:1.15;font-variant-numeric:tabular-nums}
 .result .big small{font-size:1rem;color:var(--muted);margin-left:4px}
+.result .wt{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 14px;margin-top:10px;padding-top:10px;border-top:1px dashed var(--mark)}
+.result .wt .kg{font-family:var(--f-num);font-size:1.5rem;font-weight:600;font-variant-numeric:tabular-nums}
+.result .wt .kg small{font-size:.85rem;color:var(--muted);margin-left:3px}
+.result .wt .meta{font-size:.8rem;color:var(--muted)}
 .result .note{font-size:.78rem;color:var(--muted);margin-top:2px}
 .steps{font-family:var(--f-num);font-size:.86rem;font-variant-numeric:tabular-nums;margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:6px}
 .steps li{display:grid;grid-template-columns:auto 1fr;gap:8px;overflow-wrap:anywhere}
@@ -108,9 +112,11 @@ td.x button{border:0;background:transparent;color:var(--muted);cursor:pointer;fo
         <option value="50">重型（扣 50）</option>
         <option value="custom">自訂</option></select></div></div>
       <div class="field"><label for="h-head">橫桿頭單邊扣除<small>兩端各扣一次</small></label><div class="inp"><input id="h-head" type="number" inputmode="decimal" step="any" value="42.5"><span>mm</span></div></div>
+      <div class="field"><label for="h-pd">橫桿鐵管外徑<small>STK500，算重量用</small></label><div class="inp"><input id="h-pd" type="number" inputmode="decimal" step="any" value="42.5"><span>mm</span></div></div>
+      <div class="field"><label for="h-pt">橫桿鐵管厚度</label><div class="inp"><input id="h-pt" type="number" inputmode="decimal" step="any" value="2.3"><span>mm</span></div></div>
     </div>
     <div class="panel">
-      <div class="result"><div class="lbl">鐵管裁切長度</div><div class="big" id="h-out">—</div><div class="note">工件長度 − 橫桿頭 × 2</div></div>
+      <div class="result"><div class="lbl">鐵管裁切長度</div><div class="big" id="h-out">—</div><div class="note">工件長度 − 橫桿頭 × 2</div><div class="wt"><span class="lbl">鐵管重量</span><span class="kg" id="h-kg">—</span><span class="meta" id="h-kgm"></span></div></div>
       <ol class="steps" id="h-steps"></ol>
       <svg class="dia" viewBox="0 0 320 90" aria-hidden="true">
         <rect x="14" y="10" width="14" height="70" rx="3" fill="var(--line)"/><rect x="292" y="10" width="14" height="70" rx="3" fill="var(--line)"/>
@@ -135,9 +141,11 @@ td.x button{border:0;background:transparent;color:var(--muted);cursor:pointer;fo
       <div class="field"><label for="d-v">垂直距離</label><div class="inp"><input id="d-v" type="number" inputmode="decimal" step="any" value="1500"><span>mm</span></div></div>
       <div class="field"><label for="d-off">管中心到斜桿頭鉚釘孔<small>單邊</small></label><div class="inp"><input id="d-off" type="number" inputmode="decimal" step="any" value="82"><span>mm</span></div></div>
       <div class="field"><label for="d-end">鉚釘孔到管端加長<small>單邊</small></label><div class="inp"><input id="d-end" type="number" inputmode="decimal" step="any" value="25"><span>mm</span></div></div>
+      <div class="field"><label for="d-pd">斜桿鐵管外徑<small>STK500，算重量用</small></label><div class="inp"><input id="d-pd" type="number" inputmode="decimal" step="any" value="42.7"><span>mm</span></div></div>
+      <div class="field"><label for="d-pt">斜桿鐵管厚度</label><div class="inp"><input id="d-pt" type="number" inputmode="decimal" step="any" value="2.3"><span>mm</span></div></div>
     </div>
     <div class="panel">
-      <div class="result"><div class="lbl">鐵管裁切長度</div><div class="big" id="d-out">—</div></div>
+      <div class="result"><div class="lbl">鐵管裁切長度</div><div class="big" id="d-out">—</div><div class="wt"><span class="lbl">鐵管重量</span><span class="kg" id="d-kg">—</span><span class="meta" id="d-kgm"></span></div></div>
       <ol class="steps" id="d-steps"></ol>
       <svg class="dia" viewBox="0 0 320 150" aria-hidden="true">
         <rect x="14" y="8" width="12" height="134" rx="3" fill="var(--line)"/><rect x="294" y="8" width="12" height="134" rx="3" fill="var(--line)"/>
@@ -160,7 +168,7 @@ td.x button{border:0;background:transparent;color:var(--muted);cursor:pointer;fo
       <span class="toast" id="toast" aria-live="polite"></span>
     </div>
     <div class="tablewrap"><table>
-      <thead><tr><th>品項</th><th>規格</th><th style="text-align:right">裁切長度</th><th style="text-align:right">數量</th><th style="text-align:right">小計長度</th><th></th></tr></thead>
+      <thead><tr><th>品項</th><th>規格</th><th style="text-align:right">裁切長度</th><th style="text-align:right">數量</th><th style="text-align:right">小計長度</th><th style="text-align:right">單支重</th><th style="text-align:right">小計重量</th><th></th></tr></thead>
       <tbody id="list"></tbody>
       <tfoot id="foot"></tfoot>
     </table></div>
@@ -174,6 +182,14 @@ const $=id=>document.getElementById(id);
 const num=id=>parseFloat($(id).value);
 const f=(n,d=1)=>Number.isFinite(n)?(Math.round(n*10**d)/10**d).toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:d}):'—';
 let mode='h', current=null;
+// STK500 碳鋼，密度 7.85 g/cm³：每米重 kg/m = (外徑 − 厚度) × 厚度 × 0.024661
+const kgPerM=(d,t)=>(d-t)*t*Math.PI*7.85/1000;
+function showKg(pre,lenmm,d,t){
+  const km=kgPerM(d,t), kg=km*lenmm/1000, ok=Number.isFinite(kg)&&kg>0&&t<d/2;
+  $(pre+'-kg').innerHTML=ok?`${f(kg,2)}<small>kg</small>`:'—';
+  $(pre+'-kgm').textContent=ok?`STK500 Ø${f(d)}×${f(t)} · ${f(km,3)} kg/m`:'請確認外徑與厚度';
+  return ok?kg:null;
+}
 
 function calcH(){
   const c=num('h-c'),od=num('h-od'),hd=num('h-head');
@@ -184,7 +200,8 @@ function calcH(){
   $('h-steps').innerHTML=`
    <li><b>工件長度</b><span>${f(c)} − ${f(od)} = ${f(clear)}</span></li>
    <li><b>裁切長度</b><span>${f(clear)} − ${f(hd)} − ${f(hd)} = ${f(cut)}</span></li>`;
-  current=Number.isFinite(cut)&&cut>0?{kind:'橫桿',spec:`中心距 ${f(c)} · 工件長 ${f(clear)} · ${typeName}頭 ${f(hd)}`,len:cut}:null;
+  const pd=num('h-pd'),pt=num('h-pt'),kg=Number.isFinite(cut)&&cut>0?showKg('h',cut,pd,pt):showKg('h',NaN,pd,pt);
+  current=Number.isFinite(cut)&&cut>0?{kind:'橫桿',spec:`中心距 ${f(c)} · 工件長 ${f(clear)} · ${typeName}頭 ${f(hd)} · Ø${f(pd)}×${f(pt)}`,len:cut,kg}:null;
 }
 function calcD(){
   const w=num('d-w'),v=num('d-v'),off=num('d-off'),end=num('d-end');
@@ -194,7 +211,8 @@ function calcD(){
    <li><b>水平鉚釘距</b><span>${f(w)} − ${f(off)} − ${f(off)} = ${f(a)}</span></li>
    <li><b>斜邊</b><span>√(${f(a)}² + ${f(v)}²) = √${f(a*a+v*v,0)} = ${f(hyp,2)}</span></li>
    <li><b>加管端</b><span>${f(hyp,2)} + ${f(end)} + ${f(end)} = ${f(cut)}</span></li>`;
-  current=Number.isFinite(cut)&&a>0?{kind:'斜桿',spec:`${f(w)} × ${f(v)}`,len:cut}:null;
+  const pd=num('d-pd'),pt=num('d-pt'),kg=Number.isFinite(cut)&&a>0?showKg('d',cut,pd,pt):showKg('d',NaN,pd,pt);
+  current=Number.isFinite(cut)&&a>0?{kind:'斜桿',spec:`${f(w)} × ${f(v)} · Ø${f(pd)}×${f(pt)}`,len:cut,kg}:null;
 }
 function calc(){mode==='h'?calcH():calcD();markPresets()}
 function markPresets(){
@@ -210,7 +228,7 @@ function setMode(m){
 }
 document.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>setMode(b.dataset.mode));
 document.querySelectorAll('input').forEach(i=>i.addEventListener('input',calc));
-$('h-type').onchange=()=>{const v=$('h-type').value;if(v!=='custom')$('h-head').value=v;calc()};
+$('h-type').onchange=()=>{const v=$('h-type').value;if(v!=='custom'){$('h-head').value=v;$('h-pd').value=v==='50'?'48.4':'42.5';$('h-pt').value='2.3'}calc()};
 $('h-head').addEventListener('input',()=>{const v=$('h-head').value;$('h-type').value=(v==='42.5'||v==='50')?v:'custom'});
 document.querySelectorAll('#h-presets button').forEach(b=>b.onclick=()=>{$('h-c').value=b.dataset.c;calc()});
 document.querySelectorAll('#d-presets button').forEach(b=>b.onclick=()=>{$('d-w').value=b.dataset.w;$('d-v').value=b.dataset.v;calc()});
@@ -220,9 +238,9 @@ let list=[];
 try{list=JSON.parse(localStorage.getItem('pc-list')||'[]')}catch(e){list=[]}
 function save(){try{localStorage.setItem('pc-list',JSON.stringify(list))}catch(e){}}
 function render(){
-  $('list').innerHTML=list.map((r,i)=>`<tr><td>${r.kind}</td><td>${r.spec}</td><td class="n">${f(r.len)}</td><td class="n">${r.qty}</td><td class="n">${f(r.len*r.qty)}</td><td class="x"><button aria-label="刪除" data-i="${i}">✕</button></td></tr>`).join('');
-  const total=list.reduce((s,r)=>s+r.len*r.qty,0), pcs=list.reduce((s,r)=>s+r.qty,0);
-  $('foot').innerHTML=list.length?`<tr><th colspan="3">合計</th><td class="n"><b>${pcs}</b></td><td class="n"><b>${f(total)}</b></td><td></td></tr>`:'';
+  $('list').innerHTML=list.map((r,i)=>`<tr><td>${r.kind}</td><td>${r.spec}</td><td class="n">${f(r.len)}</td><td class="n">${r.qty}</td><td class="n">${f(r.len*r.qty)}</td><td class="n">${r.kg?f(r.kg,2)+' kg':'—'}</td><td class="n">${r.kg?f(r.kg*r.qty,2)+' kg':'—'}</td><td class="x"><button aria-label="刪除" data-i="${i}">✕</button></td></tr>`).join('');
+  const tkg=list.reduce((s,r)=>s+(r.kg||0)*r.qty,0), total=list.reduce((s,r)=>s+r.len*r.qty,0), pcs=list.reduce((s,r)=>s+r.qty,0);
+  $('foot').innerHTML=list.length?`<tr><th colspan="3">合計</th><td class="n"><b>${pcs}</b></td><td class="n"><b>${f(total)}</b></td><td></td><td class="n"><b>${f(tkg,2)} kg</b></td><td></td></tr>`:'';
   $('empty').hidden=list.length>0;
   $('list').querySelectorAll('button').forEach(b=>b.onclick=()=>{list.splice(+b.dataset.i,1);save();render()});
 }
@@ -240,7 +258,7 @@ $('clear').onclick=()=>{
 };
 $('copy').onclick=async()=>{
   if(!list.length){flash('清單是空的');return}
-  const txt=list.map(r=>`${r.kind}\t${r.spec}\t${f(r.len)} mm\t× ${r.qty}`).join('\n');
+  const txt=list.map(r=>`${r.kind}\t${r.spec}\t${f(r.len)} mm\t× ${r.qty}${r.kg?`\t${f(r.kg*r.qty,2)} kg`:''}`).join('\n');
   try{await navigator.clipboard.writeText(txt);flash('已複製')}catch(e){flash('無法複製，請手動選取表格')}
 };
 
